@@ -25,7 +25,7 @@ export const addToCartActionThunk = (bookToAdd) => {
     // this is the perfect place for doing even async operations!
     // you can delay the dispatching of your action, i.e. waiting for a fetch
     console.log('In a second I will add the item to the cart!')
-    console.log('a little more...')
+    console.log('a little more...', getState())
     dispatch({
       type: 'ADD_ITEM_TO_CART',
       payload: bookToAdd,
@@ -34,3 +34,47 @@ export const addToCartActionThunk = (bookToAdd) => {
 }
 
 // without thunk, redux will not allow you to do this! it will crash :(
+
+export const fillBooksAction = () => {
+  return async (dispatch, getState) => {
+    console.log('fetching the books...')
+    try {
+      let resp = await fetch('https://striveschool-api.herokuapp.com/food-books')
+      if (resp.ok) {
+        let books = await resp.json()
+        dispatch({
+          type: 'FILL_BOOKS_LOADING',
+          payload: false,
+        })
+        dispatch({
+          type: 'FILL_BOOKS_ERROR',
+          payload: false,
+        })
+        dispatch({
+          type: 'FILL_BOOKS',
+          payload: books,
+        })
+      } else {
+        console.log('error')
+        dispatch({
+          type: 'FILL_BOOKS_LOADING',
+          payload: false,
+        })
+        dispatch({
+          type: 'FILL_BOOKS_ERROR',
+          payload: true,
+        })
+      }
+    } catch (error) {
+      console.log(error)
+      dispatch({
+        type: 'FILL_BOOKS_LOADING',
+        payload: false,
+      })
+      dispatch({
+        type: 'FILL_BOOKS_ERROR',
+        payload: true,
+      })
+    }
+  }
+}

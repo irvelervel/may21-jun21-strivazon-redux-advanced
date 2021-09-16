@@ -2,6 +2,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import cartReducer from '../reducers/cart'
 import userReducer from '../reducers/user'
 import thunk from 'redux-thunk'
+import bookReducer from '../reducers/book'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 
@@ -17,11 +18,17 @@ export const initialState = {
   user: {
     firstName: '',
   },
+  book: {
+    stock: [],
+    loading: true,
+    error: false,
+  },
 }
 
 const bigReducer = combineReducers({
   cart: cartReducer,
   user: userReducer,
+  book: bookReducer,
 })
 
 const configureStore = createStore(

@@ -2,27 +2,23 @@ import { Component } from "react";
 import BookList from "./BookList";
 import BookDetail from "./BookDetail";
 import { Col, Row } from "react-bootstrap";
+import { connect } from 'react-redux'
+import { fillBooksAction } from "../actions";
+
+const mapStateToProps = state => state
+
+const mapDispatchToProps = dispatch => ({
+  fetchBooks: () => dispatch(fillBooksAction())
+})
 
 class BookStore extends Component {
   state = {
-    books: [],
+    // books: [],
     bookSelected: null,
   };
 
-  componentDidMount = async () => {
-    try {
-      let resp = await fetch(
-        "https://striveschool-api.herokuapp.com/food-books"
-      );
-      if (resp.ok) {
-        let books = await resp.json();
-        this.setState({ books });
-      } else {
-        console.log("error");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+  componentDidMount = () => {
+    this.props.fetchBooks()
   };
 
   changeBook = (book) => this.setState({ bookSelected: book });
@@ -30,7 +26,7 @@ class BookStore extends Component {
   render() {
     return (
       <Row>
-        <Col md={4}>
+        {/* <Col md={4}>
           <BookList
             bookSelected={this.state.bookSelected}
             changeBook={this.changeBook}
@@ -41,10 +37,10 @@ class BookStore extends Component {
           <BookDetail
             bookSelected={this.state.bookSelected}
           />
-        </Col>
+        </Col> */}
       </Row>
     );
   }
 }
 
-export default BookStore;
+export default connect(mapStateToProps, mapDispatchToProps)(BookStore);

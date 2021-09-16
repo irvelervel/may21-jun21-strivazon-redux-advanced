@@ -45,7 +45,7 @@ const CartIndicator = ({ cartLength, firstName, setUsername, history, location, 
                 setName(e.target.value)
               }}
               onKeyDown={e => {
-                console.log(e)
+                // console.log(e)
                 if (e.key === 'Enter') {
                   // let's send the name value to the redux store!
                   setUsername(name)
