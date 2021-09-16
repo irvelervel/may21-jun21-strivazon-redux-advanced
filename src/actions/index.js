@@ -35,17 +35,20 @@ export const addToCartActionThunk = (bookToAdd) => {
 
 // without thunk, redux will not allow you to do this! it will crash :(
 
-export const fillBooksAction = () => {
+export const fillBooksAction = (searchString) => {
   return async (dispatch, getState) => {
     console.log('fetching the books...')
+    const baseUrl = 'https://striveschool-api.herokuapp.com/food-books'
     try {
-      let resp = await fetch('https://striveschool-api.herokuapp.com/food-books')
+      let resp = await fetch(searchString ? baseUrl + '?title=' + searchString : baseUrl)
       if (resp.ok) {
         let books = await resp.json()
-        dispatch({
-          type: 'FILL_BOOKS_LOADING',
-          payload: false,
-        })
+        setTimeout(() => {
+          dispatch({
+            type: 'FILL_BOOKS_LOADING',
+            payload: false,
+          })
+        }, 1000)
         dispatch({
           type: 'FILL_BOOKS_ERROR',
           payload: false,
@@ -56,25 +59,33 @@ export const fillBooksAction = () => {
         })
       } else {
         console.log('error')
+        setTimeout(() => {
+          dispatch({
+            type: 'FILL_BOOKS_LOADING',
+            payload: false,
+          })
+        }, 1000)
+        setTimeout(() => {
+          dispatch({
+            type: 'FILL_BOOKS_ERROR',
+            payload: true,
+          })
+        }, 1000)
+      }
+    } catch (error) {
+      console.log(error)
+      setTimeout(() => {
         dispatch({
           type: 'FILL_BOOKS_LOADING',
           payload: false,
         })
+      }, 1000)
+      setTimeout(() => {
         dispatch({
           type: 'FILL_BOOKS_ERROR',
           payload: true,
         })
-      }
-    } catch (error) {
-      console.log(error)
-      dispatch({
-        type: 'FILL_BOOKS_LOADING',
-        payload: false,
-      })
-      dispatch({
-        type: 'FILL_BOOKS_ERROR',
-        payload: true,
-      })
+      }, 1000)
     }
   }
 }

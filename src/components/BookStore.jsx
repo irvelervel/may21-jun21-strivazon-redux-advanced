@@ -1,7 +1,7 @@
 import { Component } from "react";
 import BookList from "./BookList";
 import BookDetail from "./BookDetail";
-import { Col, Row } from "react-bootstrap";
+import { Alert, Col, Row, Spinner } from "react-bootstrap";
 import { connect } from 'react-redux'
 import { fillBooksAction } from "../actions";
 
@@ -24,20 +24,35 @@ class BookStore extends Component {
   changeBook = (book) => this.setState({ bookSelected: book });
 
   render() {
+    console.log(this.props)
+    console.log(this.state)
     return (
       <Row>
-        {/* <Col md={4}>
-          <BookList
-            bookSelected={this.state.bookSelected}
-            changeBook={this.changeBook}
-            books={this.state.books}
-          />
-        </Col>
-        <Col md={8}>
-          <BookDetail
-            bookSelected={this.state.bookSelected}
-          />
-        </Col> */}
+        {
+          this.props.book.error ? (
+            <Alert variant="danger">
+              SOMETHING WENT WRONG!
+            </Alert>
+          ) : this.props.book.loading ? (
+            <Spinner animation="border" variant="success" />
+          ) :
+            (
+              <>
+                <Col md={4}>
+                  <BookList
+                    bookSelected={this.state.bookSelected}
+                    changeBook={this.changeBook}
+                    books={this.props.book.stock}
+                  />
+                </Col>
+                <Col md={8}>
+                  <BookDetail
+                    bookSelected={this.state.bookSelected}
+                  />
+                </Col>
+              </>
+            )
+        }
       </Row>
     );
   }
