@@ -1,6 +1,6 @@
 import Book from "./Book";
 import Form from 'react-bootstrap/Form'
-import { connect, useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { fillBooksAction } from "../actions";
 
 // const mapStateToProps = state => state
@@ -11,8 +11,9 @@ import { fillBooksAction } from "../actions";
 // })
 // useDispatch can replace the classical mapDispatchToProps
 
-const BookList = ({ books, changeBook, bookSelected, fetchBooksWithSearch }) => {
+const BookList = ({ books, changeBook, bookSelected }) => {
 
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -22,7 +23,7 @@ const BookList = ({ books, changeBook, bookSelected, fetchBooksWithSearch }) => 
             type="text"
             onChange={e => {
               // here I'm going to dispatch fillBooksAction with the value I have in the search variable
-              fetchBooksWithSearch(e.target.value)
+              dispatch(fillBooksAction(e.target.value))
             }}
             placeholder="Search for a book..."
           />

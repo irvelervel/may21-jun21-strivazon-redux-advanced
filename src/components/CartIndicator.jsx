@@ -2,9 +2,10 @@ import Button from "react-bootstrap/Button";
 import FormControl from "react-bootstrap/FormControl";
 import { withRouter } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
-import { connect } from 'react-redux'
 import { useState } from "react";
 import { setUsernameAction } from "../actions";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 // how do you connect a component to the store? using the connect function from 'react-redux'
 // connect can take up to two parameters, and these parameters are functions:
@@ -12,19 +13,13 @@ import { setUsernameAction } from "../actions";
 // mapStateToProps is a function taking the whole redux store and returning an object,
 // each key of this object will then became a prop of this react component
 
-const mapStateToProps = (state) => ({
-  cartLength: state.cart.products.length,
-  firstName: state.user.firstName
-})
-
-const mapDispatchToProps = dispatch => ({
-  setUsername: (name) => dispatch(setUsernameAction(name))
-})
-
-const CartIndicator = ({ cartLength, firstName, setUsername, history, location, match }) => {
-
-
+const CartIndicator = ({ history, location, match }) => {
   const [name, setName] = useState('')
+
+  const firstName = useSelector(state => state.user.firstName)
+  const cartLength = useSelector(state => state.cart.products.length)
+
+  const dispatch = useDispatch()
 
   return (
     <div className="ml-auto mt-2">
@@ -48,7 +43,7 @@ const CartIndicator = ({ cartLength, firstName, setUsername, history, location, 
                 // console.log(e)
                 if (e.key === 'Enter') {
                   // let's send the name value to the redux store!
-                  setUsername(name)
+                  dispatch(setUsernameAction(name))
                 }
               }}
             />
@@ -58,4 +53,4 @@ const CartIndicator = ({ cartLength, firstName, setUsername, history, location, 
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(withRouter(CartIndicator));
+export default withRouter(CartIndicator);

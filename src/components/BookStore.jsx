@@ -1,61 +1,52 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import BookList from "./BookList";
 import BookDetail from "./BookDetail";
 import { Alert, Col, Row, Spinner } from "react-bootstrap";
-import { connect } from 'react-redux'
 import { fillBooksAction } from "../actions";
+import { useDispatch, useSelector } from "react-redux";
 
-const mapStateToProps = state => state
+const BookStore = () => {
 
-const mapDispatchToProps = dispatch => ({
-  fetchBooks: () => dispatch(fillBooksAction())
-})
+  const [bookSelected, setBookSelected] = useState(null)
 
-class BookStore extends Component {
-  state = {
-    // books: [],
-    bookSelected: null,
-  };
+  const dispatch = useDispatch()
 
-  componentDidMount = () => {
-    this.props.fetchBooks()
-  };
+  const book = useSelector(state => state.book)
 
-  changeBook = (book) => this.setState({ bookSelected: book });
+  useEffect(() => {
+    dispatch(fillBooksAction())
+  }, [])
 
-  render() {
-    console.log(this.props)
-    console.log(this.state)
-    return (
-      <Row>
-        {
-          this.props.book.error ? (
-            <Alert variant="danger">
-              SOMETHING WENT WRONG!
-            </Alert>
-          ) : this.props.book.loading ? (
-            <Spinner animation="border" variant="success" />
-          ) :
-            (
-              <>
-                <Col md={4}>
-                  <BookList
-                    bookSelected={this.state.bookSelected}
-                    changeBook={this.changeBook}
-                    books={this.props.book.stock}
-                  />
-                </Col>
-                <Col md={8}>
-                  <BookDetail
-                    bookSelected={this.state.bookSelected}
-                  />
-                </Col>
-              </>
-            )
-        }
-      </Row>
-    );
-  }
+  const changeBook = (book) => setBookSelected(book)
+
+  return (
+    <Row>
+      {
+        book.error ? (
+          <Alert variant="danger">
+            SOMETHING WENT WRONG!
+          </Alert>
+        ) : book.loading ? (
+          <Spinner animation="border" variant="success" />
+        ) :
+          (
+            <>
+              <Col md={4}>
+                <BookList
+                  bookSelected={bookSelected}
+                  changeBook={changeBook}
+                  books={book.stock}
+                />
+              </Col>
+              <Col md={8}>
+                <BookDetail
+                  bookSelected={bookSelected}
+                />
+              </Col>
+            </>
+          )
+      }
+    </Row>
+  );
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(BookStore);
+export default BookStore

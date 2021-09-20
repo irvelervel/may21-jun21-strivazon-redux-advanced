@@ -1,23 +1,16 @@
 import Button from "react-bootstrap/Button";
 import { FaTrash } from "react-icons/fa";
 import { Col, Row } from "react-bootstrap";
-import { connect, useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { removeFromCartAction } from "../actions";
 import { useEffect } from "react";
 
-// const mapStateToProps = state => ({
-// cart: state.cart.products,
-//   firstName: state.user.firstName
-// })
-
-// const mapDispatchToProps = dispatch => ({
-//   removeFromCart: (index) => dispatch(removeFromCartAction(index))
-// })
-
-const Cart = ({ removeFromCart, history }) => {
+const Cart = ({ history }) => {
 
   const cart = useSelector(state => state.cart.products)
   const firstName = useSelector(state => state.user.firstName)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     if (!firstName) {
@@ -32,7 +25,7 @@ const Cart = ({ removeFromCart, history }) => {
         <ul style={{ listStyle: "none" }}>
           {cart.map((book, i) => (
             <li key={i} className="my-4">
-              <Button variant="danger" onClick={() => removeFromCart(i)}>
+              <Button variant="danger" onClick={() => dispatch(removeFromCartAction(i))}>
                 <FaTrash />
               </Button>
               <img
