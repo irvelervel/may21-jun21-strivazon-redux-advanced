@@ -7,6 +7,7 @@ import bookReducer from '../reducers/book'
 import { persistStore, persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 // import storageSession from 'redux-persist/lib/storage/session'
+import { encryptTransform } from 'redux-persist-transform-encrypt'
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 
@@ -32,6 +33,11 @@ export const initialState = {
 const persistConfig = {
   key: 'root',
   storage,
+  transforms: [
+    encryptTransform({
+      secretKey: process.env.REACT_APP_ENCRYPT_KEY,
+    }),
+  ],
 }
 
 const bigReducer = combineReducers({

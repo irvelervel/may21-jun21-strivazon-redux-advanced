@@ -1,20 +1,23 @@
 import Button from "react-bootstrap/Button";
 import { FaTrash } from "react-icons/fa";
 import { Col, Row } from "react-bootstrap";
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { removeFromCartAction } from "../actions";
 import { useEffect } from "react";
 
-const mapStateToProps = state => ({
-  cart: state.cart.products,
-  firstName: state.user.firstName
-})
+// const mapStateToProps = state => ({
+// cart: state.cart.products,
+//   firstName: state.user.firstName
+// })
 
-const mapDispatchToProps = dispatch => ({
-  removeFromCart: (index) => dispatch(removeFromCartAction(index))
-})
+// const mapDispatchToProps = dispatch => ({
+//   removeFromCart: (index) => dispatch(removeFromCartAction(index))
+// })
 
-const Cart = ({ cart, firstName, removeFromCart, history }) => {
+const Cart = ({ removeFromCart, history }) => {
+
+  const cart = useSelector(state => state.cart.products)
+  const firstName = useSelector(state => state.user.firstName)
 
   useEffect(() => {
     if (!firstName) {
@@ -55,4 +58,4 @@ const Cart = ({ cart, firstName, removeFromCart, history }) => {
   )
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cart);
+export default Cart;
