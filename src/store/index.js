@@ -4,6 +4,10 @@ import userReducer from '../reducers/user'
 import thunk from 'redux-thunk'
 import bookReducer from '../reducers/book'
 
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+// import storageSession from 'redux-persist/lib/storage/session'
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
 
 // 3 arguments for createStore:
@@ -25,22 +29,31 @@ export const initialState = {
   },
 }
 
+const persistConfig = {
+  key: 'root',
+  storage,
+}
+
 const bigReducer = combineReducers({
   cart: cartReducer,
   user: userReducer,
   book: bookReducer,
 })
 
-const configureStore = createStore(
-  bigReducer,
+const persistedReducer = persistReducer(persistConfig, bigReducer)
+
+export const configureStore = createStore(
+  persistedReducer,
   initialState,
   process.env.REACT_APP_DEVELOPMENT ? composeEnhancers(applyMiddleware(thunk)) : compose(applyMiddleware(thunk))
+  // if the application is in production mode, disable the redux devTools just injecting redux-thunk into the middleware flow
+
   // compose allows you to inject multiple applyMiddleware invokations
   // applyMiddleware is required for injecting a middleware into the redux flow
   // in the case you're using the devTools, you'll need to use their own compose function (window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__)
 )
 
-export default configureStore
+export const persistor = persistStore(configureStore)
 
 // how to split the reducers?
 // use the combineReducers function and assign a key of your store to one single reducer

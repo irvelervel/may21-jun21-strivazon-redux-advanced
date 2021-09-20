@@ -8,10 +8,12 @@ export const removeFromCartAction = (index) => ({
   payload: index,
 })
 
-export const setUsernameAction = (name) => ({
-  type: 'SET_USERNAME',
-  payload: name,
-})
+export const setUsernameAction = (name) => {
+  return {
+    type: 'SET_USERNAME',
+    payload: name,
+  }
+}
 
 // redux-thunk will allow you to create much more powerful action-creators
 // an action-creator so far is just a function returning an action (a JS object)
@@ -37,7 +39,7 @@ export const addToCartActionThunk = (bookToAdd) => {
 
 export const fillBooksAction = (searchString) => {
   return async (dispatch, getState) => {
-    console.log('fetching the books...')
+    console.log('fetching the books...', getState())
     const baseUrl = 'https://striveschool-api.herokuapp.com/food-books'
     try {
       let resp = await fetch(searchString ? baseUrl + '?title=' + searchString : baseUrl)
